@@ -17,6 +17,7 @@
 		22678BAC212DA21200BDF31D /* SwipeUpPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BAB212DA21200BDF31D /* SwipeUpPresentationController.swift */; };
 		22678BAE212E9B2200BDF31D /* UIWindow+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */; };
 		22678BB0212E9B4A00BDF31D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */; };
+		22678BB2212ECC8B00BDF31D /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		22678BAB212DA21200BDF31D /* SwipeUpPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeUpPresentationController.swift; sourceTree = "<group>"; };
 		22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extensions.swift"; sourceTree = "<group>"; };
 		22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				22678BAB212DA21200BDF31D /* SwipeUpPresentationController.swift */,
 				22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */,
 				22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */,
+				22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */,
 			);
 			path = SwipeUp;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				22678B96212D9FBF00BDF31D /* AppDelegate.swift in Sources */,
 				22678BAE212E9B2200BDF31D /* UIWindow+Extensions.swift in Sources */,
 				22678BAA212DA15400BDF31D /* SwipeUpTransitioningDelegate.swift in Sources */,
+				22678BB2212ECC8B00BDF31D /* CGFloat+Extensions.swift in Sources */,
 				22678BA8212DA0FB00BDF31D /* SwipeUpDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

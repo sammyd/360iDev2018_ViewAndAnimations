@@ -34,7 +34,7 @@ fileprivate extension Double {
 }
 
 class SwipeUpPresentationController: UIPresentationController {
-  enum Position {
+  private enum Position {
     case open
     case closed
     case partial
@@ -44,6 +44,13 @@ class SwipeUpPresentationController: UIPresentationController {
       case .open: return 0.9
       case .closed: return 0.1
       case .partial: return 0.45
+      }
+    }
+    
+    var dimmedAlpha: CGFloat {
+      switch self {
+      case .open: return 0.6
+      default: return 0
       }
     }
     
@@ -62,6 +69,14 @@ class SwipeUpPresentationController: UIPresentationController {
         }
       }).position
     }
+    
+    static func proportionBetweenPartialAndOpen(for offset: CGFloat, maxHeight: CGFloat) -> CGFloat {
+      let offsetOpen = Position.open.origin(for: maxHeight).y
+      let offsetPartial = Position.partial.origin(for: maxHeight).y
+      
+      let proportion = (offset - offsetPartial) / (offsetOpen - offsetPartial)
+      return proportion.clamp(min: 0, max: 1)
+    }
   }
 
   private var position: Position = .closed
@@ -76,10 +91,21 @@ class SwipeUpPresentationController: UIPresentationController {
     return animator
   }()
   
+  private let dimmedView = UIView()
+  
   override var frameOfPresentedViewInContainerView: CGRect {
     let origin = position.origin(for: maxFrame.height)
     let size = CGSize(width: maxFrame.width, height: maxFrame.height + 40)
     return CGRect(origin: origin, size: size)
+  }
+  
+  override func presentationTransitionWillBegin() {
+    guard let containerView = containerView else { return }
+    
+    containerView.insertSubview(dimmedView, at: 1)
+    dimmedView.frame = containerView.bounds
+    dimmedView.backgroundColor = .black
+    dimmedView.alpha = 0
   }
   
   override func presentationTransitionDidEnd(_ completed: Bool) {
@@ -97,6 +123,7 @@ class SwipeUpPresentationController: UIPresentationController {
       switch recogniser.state {
       case .changed, .began:
         presentedView?.frame.origin.y = offset
+        dimmedView.alpha = Position.proportionBetweenPartialAndOpen(for: offset, maxHeight: maxFrame.height) * Position.open.dimmedAlpha
       case .ended, .cancelled:
         animate(to: offset)
       default:
@@ -120,6 +147,7 @@ extension SwipeUpPresentationController {
   private func animate(to newPosition: Position) {
     animator.addAnimations {
       self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
+      self.dimmedView.alpha = newPosition.dimmedAlpha
     }
     
     animator.addCompletion { (animatingPosition) in
