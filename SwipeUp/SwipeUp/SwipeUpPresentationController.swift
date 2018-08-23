@@ -37,11 +37,13 @@ class SwipeUpPresentationController: UIPresentationController {
   enum Position {
     case open
     case closed
+    case partial
     
     var visibleProportion: CGFloat {
       switch self {
       case .open: return 0.9
       case .closed: return 0.1
+      case .partial: return 0.45
       }
     }
     
@@ -50,10 +52,9 @@ class SwipeUpPresentationController: UIPresentationController {
     }
     
     static func closest(for offset: CGFloat, maxHeight: CGFloat) -> Position {
-      return [Position.open, .closed].reduce((position: .open, delta: .greatestFiniteMagnitude), { (currentWinner, position) -> (position: Position, delta: CGFloat) in
+      return [Position.open, .closed, .partial].reduce((position: .open, delta: .greatestFiniteMagnitude), { (currentWinner, position) -> (position: Position, delta: CGFloat) in
         let originY = position.origin(for: maxHeight).y
         let delta = abs(originY - offset)
-        print(offset, originY, delta)
         if delta < currentWinner.delta {
           return (position: position, delta: delta)
         } else {
@@ -82,20 +83,10 @@ class SwipeUpPresentationController: UIPresentationController {
   }
   
   override func presentationTransitionDidEnd(_ completed: Bool) {
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(recogniser:)))
     let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(recogniser:)))
-    presentedView?.addGestureRecognizer(tapGesture)
     presentedView?.addGestureRecognizer(panGesture)
   }
   
-  @objc func handleTap(recogniser: UITapGestureRecognizer) {
-    switch position {
-    case .open:
-      animate(to: .closed)
-    case .closed:
-      animate(to: .open)
-    }
-  }
   
   @objc func handlePan(recogniser: UIPanGestureRecognizer) {
     let translation = recogniser.translation(in: presentedView)
@@ -123,7 +114,6 @@ class SwipeUpPresentationController: UIPresentationController {
 // Animations
 extension SwipeUpPresentationController {
   private func animate(to offset: CGFloat) {
-    print(Position.closest(for: offset, maxHeight: maxFrame.height))
     animate(to: Position.closest(for: offset, maxHeight: maxFrame.height))
   }
   
