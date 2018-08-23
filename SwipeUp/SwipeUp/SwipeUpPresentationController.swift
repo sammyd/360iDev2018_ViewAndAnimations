@@ -48,15 +48,22 @@ class SwipeUpPresentationController: UIPresentationController {
     func origin(for maxHeight: CGFloat) -> CGPoint {
       return CGPoint(x: 0, y: maxHeight * (1 - visibleProportion))
     }
+    
+    static func closest(for offset: CGFloat, maxHeight: CGFloat) -> Position {
+      return [Position.open, .closed].reduce((position: .open, delta: .greatestFiniteMagnitude), { (currentWinner, position) -> (position: Position, delta: CGFloat) in
+        let originY = position.origin(for: maxHeight).y
+        let delta = abs(originY - offset)
+        print(offset, originY, delta)
+        if delta < currentWinner.delta {
+          return (position: position, delta: delta)
+        } else {
+          return currentWinner
+        }
+      }).position
+    }
   }
-  
-  enum SwipeDirection {
-    case opening
-    case closing
-  }
-  
+
   private var position: Position = .closed
-  private var swipeDirection: SwipeDirection = .opening
   private var maxFrame: CGRect {
     return UIWindow.maxFrame
   }
@@ -75,8 +82,10 @@ class SwipeUpPresentationController: UIPresentationController {
   }
   
   override func presentationTransitionDidEnd(_ completed: Bool) {
-    let gesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(recogniser:)))
-    presentedView?.addGestureRecognizer(gesture)
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(recogniser:)))
+    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(recogniser:)))
+    presentedView?.addGestureRecognizer(tapGesture)
+    presentedView?.addGestureRecognizer(panGesture)
   }
   
   @objc func handleTap(recogniser: UITapGestureRecognizer) {
@@ -88,10 +97,36 @@ class SwipeUpPresentationController: UIPresentationController {
     }
   }
   
+  @objc func handlePan(recogniser: UIPanGestureRecognizer) {
+    let translation = recogniser.translation(in: presentedView)
+    let originForCurrentPosition = position.origin(for: maxFrame.height)
+    let offset = originForCurrentPosition.y + translation.y
+    
+    if offset >= 0 {
+      switch recogniser.state {
+      case .changed, .began:
+        presentedView?.frame.origin.y = offset
+      case .ended, .cancelled:
+        animate(to: offset)
+      default:
+        break
+      }
+    } else {
+      if recogniser.state == .ended {
+        animate(to: offset)
+      }
+    }
+  }
+  
 }
 
 // Animations
 extension SwipeUpPresentationController {
+  private func animate(to offset: CGFloat) {
+    print(Position.closest(for: offset, maxHeight: maxFrame.height))
+    animate(to: Position.closest(for: offset, maxHeight: maxFrame.height))
+  }
+  
   private func animate(to newPosition: Position) {
     animator.addAnimations {
       self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y

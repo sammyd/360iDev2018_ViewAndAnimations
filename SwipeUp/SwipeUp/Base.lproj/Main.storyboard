@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,14 +20,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="SMO-OM-g6R">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="SMO-OM-g6R" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="8ZE-Xs-B8P"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="SMO-OM-g6R" secondAttribute="bottom" id="9VV-tN-4F5"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="SMO-OM-g6R" secondAttribute="bottom" id="JRM-ra-WeB"/>
                             <constraint firstItem="SMO-OM-g6R" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="axZ-cp-1V3"/>
+                            <constraint firstAttribute="top" secondItem="SMO-OM-g6R" secondAttribute="top" id="fuy-KN-uIT"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SMO-OM-g6R" secondAttribute="trailing" id="kZT-vP-D0J"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
