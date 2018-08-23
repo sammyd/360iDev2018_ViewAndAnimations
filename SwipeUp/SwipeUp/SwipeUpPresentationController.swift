@@ -99,12 +99,17 @@ class SwipeUpPresentationController: UIPresentationController {
     return CGRect(origin: origin, size: size)
   }
   
+  override func containerViewWillLayoutSubviews() {
+    presentedView?.frame = frameOfPresentedViewInContainerView
+  }
+  
   override func presentationTransitionWillBegin() {
     guard let containerView = containerView else { return }
     
-    containerView.insertSubview(dimmedView, at: 1)
+    containerView.insertSubview(dimmedView, at: 0)
     dimmedView.frame = containerView.bounds
     dimmedView.backgroundColor = .black
+    dimmedView.isUserInteractionEnabled = false
     dimmedView.alpha = 0
   }
   
