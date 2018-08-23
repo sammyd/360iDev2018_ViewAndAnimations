@@ -22,6 +22,17 @@
 
 import UIKit
 
+fileprivate extension CGFloat {
+  // Spring animation
+  static let springDampingRatio: CGFloat = 0.7
+  static let springInitialVelocityY: CGFloat =  10
+}
+
+fileprivate extension Double {
+  // Spring animation
+  static let animationDuration: Double = 0.8
+}
+
 class SwipeUpPresentationController: UIPresentationController {
   enum Position {
     case open
@@ -46,15 +57,52 @@ class SwipeUpPresentationController: UIPresentationController {
   
   private var position: Position = .closed
   private var swipeDirection: SwipeDirection = .opening
+  private var maxFrame: CGRect {
+    return UIWindow.maxFrame
+  }
   
+  private lazy var animator: UIViewPropertyAnimator = {
+    let timingParams = UISpringTimingParameters(dampingRatio: .springDampingRatio, initialVelocity: CGVector(dx: 0, dy: .springInitialVelocityY))
+    let animator = UIViewPropertyAnimator(duration: .animationDuration, timingParameters: timingParams)
+    animator.isInterruptible = true
+    return animator
+  }()
   
   override var frameOfPresentedViewInContainerView: CGRect {
-    let maxFrame = UIWindow.maxFrame
     let origin = position.origin(for: maxFrame.height)
     let size = CGSize(width: maxFrame.width, height: maxFrame.height + 40)
     return CGRect(origin: origin, size: size)
   }
   
+  override func presentationTransitionDidEnd(_ completed: Bool) {
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(recogniser:)))
+    presentedView?.addGestureRecognizer(gesture)
+  }
   
+  @objc func handleTap(recogniser: UITapGestureRecognizer) {
+    switch position {
+    case .open:
+      animate(to: .closed)
+    case .closed:
+      animate(to: .open)
+    }
+  }
   
+}
+
+// Animations
+extension SwipeUpPresentationController {
+  private func animate(to newPosition: Position) {
+    animator.addAnimations {
+      self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
+    }
+    
+    animator.addCompletion { (animatingPosition) in
+      if animatingPosition == .end {
+        self.position = newPosition
+      }
+    }
+    
+    animator.startAnimation()
+  }
 }
