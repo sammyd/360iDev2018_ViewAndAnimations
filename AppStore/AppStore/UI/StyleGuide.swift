@@ -126,7 +126,7 @@ extension UIButton {
   func roundedActionButton(withText text: String) {
     let bgColor: UIColor = text == AppAccess.onCloud.description ? .clear : .buttonBackgroundColor
     backgroundColor = bgColor
-    setTitle(text, for: UIControl.State.normal)
+    setTitle(text, for: .normal)
     titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
     layer.cornerRadius = 15
     contentEdgeInsets = UIEdgeInsets(top: 5.5, left: 0, bottom:5.5, right: 0)
@@ -134,7 +134,7 @@ extension UIButton {
 }
 
 extension UIStackView {
-  func configure(withAxis axis: NSLayoutConstraint.Axis, alignment: UIStackView.Alignment, spacing: CGFloat, distribution: UIStackView.Distribution = .fill) {
+  func configure(withAxis axis: UILayoutConstraintAxis, alignment: UIStackViewAlignment, spacing: CGFloat, distribution: UIStackViewDistribution = .fill) {
     self.axis = axis
     self.alignment = alignment
     self.spacing = spacing

@@ -42,7 +42,7 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning {
   var transition: TransitionType = .presentation
   
   private let blurEffectView: UIVisualEffectView = {
-    let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+    let blurEffect = UIBlurEffect(style: .light)
     return UIVisualEffectView(effect: blurEffect)
   }()
   

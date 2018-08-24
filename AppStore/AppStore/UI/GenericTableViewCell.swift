@@ -38,7 +38,7 @@ class GenericTableViewCell<View: UIView>: UITableViewCell {
     }
   }
   
-  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+  override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
     super.init(style: .default, reuseIdentifier: reuseIdentifier)
     selectionStyle = .none
     backgroundColor = .backgroundColor

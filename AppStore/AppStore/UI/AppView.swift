@@ -46,7 +46,7 @@ class AppView: UIView {
   //MARK: UI
   fileprivate var iconImageView = UIImageView()
   fileprivate var titleLabel = UILabel()
-  fileprivate var getButton = UIButton(type: UIButton.ButtonType.roundedRect)
+  fileprivate var getButton = UIButton(type: .roundedRect)
   fileprivate var subtitleLabel = UILabel()
   fileprivate var buttonSubtitleLabel = UILabel()
   fileprivate var labelsView = UIView()
