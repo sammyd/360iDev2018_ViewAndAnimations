@@ -55,21 +55,6 @@ class ButtonView: UIView {
     return layer
   }()
   
-  private lazy var inProgressLayer: CAGradientLayer = {
-    let layer = CAGradientLayer()
-    layer.colors = [#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1), UIColor(white: 1, alpha: 0)].map{ $0.cgColor }
-    layer.locations = [0, 0.7].map { NSNumber(floatLiteral: $0) }
-    layer.frame = CGRect(centre: buttonLayer.bounds.centre, size: buttonLayer.bounds.size.rescale(CGFloat.inProgressRatio))
-    
-    let mask = CAShapeLayer()
-    
-    mask.path = UIBezierPath(ovalIn: CGRect(centre: layer.bounds.centre, size: layer.bounds.size)).cgPath
-    mask.fillColor = UIColor.black.cgColor
-    layer.mask = mask
-    layer.isHidden = true
-    return layer
-  }()
-  
   private let buttonLayer = CALayer()
   
   enum State {
@@ -82,12 +67,10 @@ class ButtonView: UIView {
     didSet {
       switch state {
       case .inProgress:
-        showInProgress()
+        break
       case .on:
-        showInProgress(false)
         animateToOn()
       case .off:
-        showInProgress(false)
         animateToOff()
       }
     }
@@ -107,7 +90,6 @@ class ButtonView: UIView {
     backgroundColor = #colorLiteral(red: 0.9600390625, green: 0.9600390625, blue: 0.9600390625, alpha: 1)
     buttonLayer.frame = bounds.largestContainedSquare.offsetBy(dx: 0, dy: -20)
     buttonLayer.addSublayer(outerCircle)
-    buttonLayer.addSublayer(inProgressLayer)
     buttonLayer.addSublayer(innerCircle)
 
     layer.addSublayer(greenBackground)
@@ -120,21 +102,6 @@ class ButtonView: UIView {
   
   private func animateToOff() {
     greenBackground.isHidden = true
-  }
-  
-  private func showInProgress(_ show: Bool = true) {
-    if show {
-      let animation = CABasicAnimation(keyPath: "transform.rotation.z")
-      animation.fromValue = 0
-      animation.toValue = 2 * Double.pi
-      animation.duration = Double.inProgressPeriod
-      animation.repeatCount = .greatestFiniteMagnitude
-      inProgressLayer.add(animation, forKey: "inProgressAnimation")
-      inProgressLayer.isHidden = false
-    } else {
-      inProgressLayer.isHidden = true
-      inProgressLayer.removeAnimation(forKey: "inProgressAnimation")
-    }
   }
 }
 
