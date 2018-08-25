@@ -59,7 +59,8 @@ class ButtonView: UIView {
     let layer = CAShapeLayer()
     layer.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.frame.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
     layer.fillColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
-    layer.isHidden = false
+    layer.mask = createBadgeMaskLayer()
+
     return layer
   }()
   
@@ -77,6 +78,23 @@ class ButtonView: UIView {
     layer.isHidden = true
     return layer
   }()
+  
+  private lazy var badgeLayer: CAGradientLayer = {
+    let layer = CAGradientLayer()
+    layer.colors = [#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), #colorLiteral(red: 0.8880859375, green: 0.8880859375, blue: 0.8880859375, alpha: 1)].map { $0.cgColor }
+    layer.frame = self.layer.bounds
+    layer.applyPopShadow()
+    layer.mask = createBadgeMaskLayer()
+    return layer
+  }()
+  
+  private func createBadgeMaskLayer() -> CAShapeLayer {
+    let scale = self.layer.bounds.width / UIBezierPath.badgePath.bounds.width
+    let mask = CAShapeLayer()
+    mask.path = UIBezierPath.badgePath.cgPath
+    mask.transform = CATransform3DMakeScale(scale, scale, 1)
+    return mask
+  }
   
   
   
@@ -119,6 +137,7 @@ class ButtonView: UIView {
     buttonLayer.addSublayer(inProgressLayer)
     buttonLayer.addSublayer(innerCircle)
     
+    layer.addSublayer(badgeLayer)
     layer.addSublayer(greenBackground)
     layer.addSublayer(buttonLayer)
   }
