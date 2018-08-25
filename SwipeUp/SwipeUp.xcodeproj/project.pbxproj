@@ -66,20 +66,60 @@
 		22678B94212D9FBF00BDF31D /* SwipeUp */ = {
 			isa = PBXGroup;
 			children = (
-				22678B95212D9FBF00BDF31D /* AppDelegate.swift */,
-				22678B97212D9FC000BDF31D /* ViewController.swift */,
-				22678B99212D9FC000BDF31D /* Main.storyboard */,
-				22678B9C212D9FC100BDF31D /* Assets.xcassets */,
-				22678B9E212D9FC100BDF31D /* LaunchScreen.storyboard */,
-				22678BA1212D9FC100BDF31D /* Info.plist */,
-				22678BA7212DA0FB00BDF31D /* SwipeUpDetailViewController.swift */,
-				22678BA9212DA15400BDF31D /* SwipeUpTransitioningDelegate.swift */,
-				22678BAB212DA21200BDF31D /* SwipeUpPresentationController.swift */,
-				22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */,
-				22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */,
-				22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */,
+				2296B7E02131984C002A4053 /* Presenters */,
+				2296B7DF21319840002A4053 /* View Controllers */,
+				2296B7DE213197C7002A4053 /* Extensions */,
+				2296B7DD213197C2002A4053 /* UI */,
+				2296B7DC213197AE002A4053 /* Guff */,
 			);
 			path = SwipeUp;
+			sourceTree = "<group>";
+		};
+		2296B7DC213197AE002A4053 /* Guff */ = {
+			isa = PBXGroup;
+			children = (
+				22678B9C212D9FC100BDF31D /* Assets.xcassets */,
+				22678BA1212D9FC100BDF31D /* Info.plist */,
+				22678B95212D9FBF00BDF31D /* AppDelegate.swift */,
+			);
+			path = Guff;
+			sourceTree = "<group>";
+		};
+		2296B7DD213197C2002A4053 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				22678B9E212D9FC100BDF31D /* LaunchScreen.storyboard */,
+				22678B99212D9FC000BDF31D /* Main.storyboard */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2296B7DE213197C7002A4053 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */,
+				22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */,
+				22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2296B7DF21319840002A4053 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				22678B97212D9FC000BDF31D /* ViewController.swift */,
+				22678BA7212DA0FB00BDF31D /* SwipeUpDetailViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		2296B7E02131984C002A4053 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				22678BAB212DA21200BDF31D /* SwipeUpPresentationController.swift */,
+				22678BA9212DA15400BDF31D /* SwipeUpTransitioningDelegate.swift */,
+			);
+			path = Presenters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,7 +346,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D23W9URMHY;
-				INFOPLIST_FILE = SwipeUp/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SwipeUp/Guff/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -324,7 +364,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D23W9URMHY;
-				INFOPLIST_FILE = SwipeUp/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SwipeUp/Guff/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
