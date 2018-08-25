@@ -3,15 +3,6 @@
 import UIKit
 import PlaygroundSupport
 
-extension CALayer {
-  func applyPopShadow() {
-    shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    shadowOffset = .zero
-    shadowRadius = 1
-    shadowOpacity = 0.1
-  }
-}
-
 fileprivate extension CGFloat {
   static var outerCircleRatio: CGFloat = 0.8
   static var innerCircleRatio: CGFloat = 0.55
@@ -24,22 +15,6 @@ fileprivate extension Double {
 }
 
 class ButtonView: UIView {
-  private lazy var innerCircle: CAShapeLayer = {
-    let layer = CAShapeLayer()
-    layer.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.bounds.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
-    layer.fillColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-    layer.shadowRadius = 15
-    layer.shadowOpacity = 0.1
-    layer.shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    layer.shadowOffset = CGSize(width: 15, height: 25)
-    layer.lineWidth = 3
-    layer.strokeColor = #colorLiteral(red: 0.6670270491, green: 0.6670270491, blue: 0.6670270491, alpha: 1)
-    layer.opacity = 1.0
-    return layer
-  }()
-  
-  private let buttonLayer = CALayer()
-  
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureLayers()
@@ -52,10 +27,7 @@ class ButtonView: UIView {
   
   private func configureLayers() {
     backgroundColor = #colorLiteral(red: 0.9600390625, green: 0.9600390625, blue: 0.9600390625, alpha: 1)
-    buttonLayer.frame = bounds.largestContainedSquare.offsetBy(dx: 0, dy: -20)
-    buttonLayer.addSublayer(innerCircle)
-
-    layer.addSublayer(buttonLayer)
+    // TODO
   }
 }
 
