@@ -22,7 +22,7 @@ public final class PseudoConnection: NSObject {
   
   public func connect() {
     state = .connecting
-    Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+    Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak self] _ in
       self?.state = .connected
     }
   }
