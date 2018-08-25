@@ -37,13 +37,11 @@ class SwipeUpPresentationController: UIPresentationController {
   private enum Position {
     case open
     case closed
-    case partial
     
     var visibleProportion: CGFloat {
       switch self {
       case .open: return 0.9
       case .closed: return 0.1
-      case .partial: return 0.45
       }
     }
     
@@ -52,7 +50,7 @@ class SwipeUpPresentationController: UIPresentationController {
     }
     
     static func closest(for offset: CGFloat, maxHeight: CGFloat) -> Position {
-      return [Position.open, .closed, .partial].reduce((position: .open, delta: .greatestFiniteMagnitude), { (currentWinner, position) -> (position: Position, delta: CGFloat) in
+      return [Position.open, .closed].reduce((position: .open, delta: .greatestFiniteMagnitude), { (currentWinner, position) -> (position: Position, delta: CGFloat) in
         let originY = position.origin(for: maxHeight).y
         let delta = abs(originY - offset)
         if delta < currentWinner.delta {
