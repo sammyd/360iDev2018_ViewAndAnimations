@@ -28,6 +28,12 @@ class ViewController: UIViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    
+    guard let swipeUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SwipeUpDetailVC") as? SwipeUpDetailViewController else { return }
+    
+    swipeUpVC.modalPresentationStyle = .overFullScreen
+    
+    present(swipeUpVC, animated: true)
   }
 }
 
