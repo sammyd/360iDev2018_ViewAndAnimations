@@ -49,8 +49,9 @@ class ButtonView: UIView {
   
   private lazy var greenBackground: CAShapeLayer = {
     let layer = CAShapeLayer()
-    layer.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.frame.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
+    layer.path = UIBezierPath(ovalIn: CGRect(centre: bounds.centre, size: bounds.smallestContainingSquare.size.rescale(sqrt(2)))).cgPath
     layer.fillColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+    layer.isHidden = true
     return layer
   }()
   
@@ -114,27 +115,11 @@ class ButtonView: UIView {
   }
   
   private func animateToOn() {
-    
-    let path = UIBezierPath(ovalIn: CGRect(centre: bounds.centre, size: bounds.smallestContainingSquare.size.rescale(sqrt(2)))).cgPath
-    let animation = CABasicAnimation(keyPath: "path")
-    animation.fromValue = greenBackground.path
-    animation.toValue = path
-    animation.duration = Double.animationDuration
-    animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-    
-    greenBackground.add(animation, forKey: "onAnimation")
-    greenBackground.path = path
+    greenBackground.isHidden = false
   }
   
   private func animateToOff() {
-    let animation = CABasicAnimation(keyPath: "path")
-    animation.fromValue = greenBackground.path
-    animation.toValue = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.frame.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
-    animation.duration = Double.animationDuration
-    animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-    
-    greenBackground.add(animation, forKey: "offAnimation")
-    greenBackground.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.frame.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
+    greenBackground.isHidden = true
   }
   
   private func showInProgress(_ show: Bool = true) {
