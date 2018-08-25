@@ -47,34 +47,7 @@ class ButtonView: UIView {
     return layer
   }()
   
-  private lazy var greenBackground: CAShapeLayer = {
-    let layer = CAShapeLayer()
-    layer.path = UIBezierPath(ovalIn: CGRect(centre: bounds.centre, size: bounds.smallestContainingSquare.size.rescale(sqrt(2)))).cgPath
-    layer.fillColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
-    layer.isHidden = true
-    return layer
-  }()
-  
   private let buttonLayer = CALayer()
-  
-  enum State {
-    case off
-    case inProgress
-    case on
-  }
-  
-  public var state: State = .off {
-    didSet {
-      switch state {
-      case .inProgress:
-        break
-      case .on:
-        animateToOn()
-      case .off:
-        animateToOff()
-      }
-    }
-  }
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -92,16 +65,7 @@ class ButtonView: UIView {
     buttonLayer.addSublayer(outerCircle)
     buttonLayer.addSublayer(innerCircle)
 
-    layer.addSublayer(greenBackground)
     layer.addSublayer(buttonLayer)
-  }
-  
-  private func animateToOn() {
-    greenBackground.isHidden = false
-  }
-  
-  private func animateToOff() {
-    greenBackground.isHidden = true
   }
 }
 
@@ -116,13 +80,10 @@ PlaygroundPage.current.liveView = button
 let connection = PseudoConnection { (state) in
   switch state {
   case .disconnected:
-    button.state = .off
     print("Disconnected")
   case .connecting:
-    button.state = .inProgress
     print("Connecting")
   case .connected:
-    button.state = .on
     print("Connected")
   }
 }
