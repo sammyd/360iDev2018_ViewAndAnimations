@@ -47,6 +47,13 @@ class SwipeUpPresentationController: UIPresentationController {
       }
     }
     
+    var dimmedAlpha: CGFloat {
+      switch self {
+      case .open: return 0.6
+      default: return 0
+      }
+    }
+    
     func origin(for maxHeight: CGFloat) -> CGPoint {
       return CGPoint(x: 0, y: maxHeight * (1 - visibleProportion))
     }
@@ -62,10 +69,19 @@ class SwipeUpPresentationController: UIPresentationController {
         }
       }).position
     }
+    
+    static func proportionBetweenPartialAndOpen(for offset: CGFloat, maxHeight: CGFloat) -> CGFloat {
+      let offsetOpen = Position.open.origin(for: maxHeight).y
+      let offsetPartial = Position.partial.origin(for: maxHeight).y
+      
+      let proportion = (offset - offsetPartial) / (offsetOpen - offsetPartial)
+      return proportion.clamp(min: 0, max: 1)
+    }
   }
   
   private var position: Position = .closed
-
+  private let dimmedView = UIView()
+  
   private var maxFrame: CGRect {
     return UIWindow.maxFrame
   }
@@ -87,6 +103,16 @@ class SwipeUpPresentationController: UIPresentationController {
     presentedView?.frame = frameOfPresentedViewInContainerView
   }
   
+  override func presentationTransitionWillBegin() {
+    guard let containerView = containerView else { return }
+    
+    containerView.insertSubview(dimmedView, at: 0)
+    dimmedView.frame = containerView.bounds
+    dimmedView.backgroundColor = .black
+    dimmedView.isUserInteractionEnabled = false
+    dimmedView.alpha = 0
+  }
+  
   override func presentationTransitionDidEnd(_ completed: Bool) {
     let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(recogniser:)))
     presentedView?.addGestureRecognizer(panGesture)
@@ -101,6 +127,7 @@ class SwipeUpPresentationController: UIPresentationController {
       switch recogniser.state {
       case .changed, .began:
         presentedView?.frame.origin.y = offset
+        dimmedView.alpha = Position.proportionBetweenPartialAndOpen(for: offset, maxHeight: maxFrame.height) * Position.open.dimmedAlpha
       case .ended, .cancelled:
         animate(to: offset)
       default:
@@ -124,6 +151,7 @@ extension SwipeUpPresentationController {
     self.position = newPosition
     animator.addAnimations {
       self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
+      self.dimmedView.alpha = newPosition.dimmedAlpha
     }
     
     animator.startAnimation()
