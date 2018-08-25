@@ -23,7 +23,5 @@
 import UIKit
 
 class SwipeUpTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-  func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-    return SwipeUpPresentationController(presentedViewController: presented, presenting: presenting)
-  }
+  // TODO
 }
