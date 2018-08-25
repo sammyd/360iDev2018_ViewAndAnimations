@@ -23,6 +23,22 @@ fileprivate extension Double {
 //: ### The main ButtonView class
 
 class ButtonView: UIView {
+  private let buttonLayer = CALayer()
+  private lazy var innerCircle: CAShapeLayer = {
+    let layer = CAShapeLayer()
+    layer.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.bounds.centre, size: buttonLayer.bounds.size.rescale(CGFloat.innerCircleRatio))).cgPath
+    layer.fillColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    layer.shadowRadius = 15
+    layer.shadowOpacity = 0.1
+    layer.shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    layer.shadowOffset = CGSize(width: 15, height: 25)
+    layer.lineWidth = 3
+    layer.strokeColor = #colorLiteral(red: 0.6670270491, green: 0.6670270491, blue: 0.6670270491, alpha: 1)
+    layer.opacity = 1.0
+    return layer
+  }()
+  
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     configureLayers()
@@ -35,7 +51,11 @@ class ButtonView: UIView {
   
   private func configureLayers() {
     backgroundColor = #colorLiteral(red: 0.9600390625, green: 0.9600390625, blue: 0.9600390625, alpha: 1)
-    // TODO
+    
+    buttonLayer.frame = bounds.largestContainedSquare.offsetBy(dx: 0, dy: -20)
+    buttonLayer.addSublayer(innerCircle)
+    
+    layer.addSublayer(buttonLayer)
   }
 }
 
