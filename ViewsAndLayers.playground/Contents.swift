@@ -19,6 +19,14 @@ fileprivate extension Double {
   static var inProgressPeriod: Double = 2.0
 }
 
+extension CALayer {
+  func applyPopShadow() {
+    shadowColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    shadowOffset = .zero
+    shadowRadius = 1
+    shadowOpacity = 0.1
+  }
+}
 
 //: ### The main ButtonView class
 
@@ -38,6 +46,16 @@ class ButtonView: UIView {
     return layer
   }()
   
+  private lazy var outerCircle: CAShapeLayer = {
+    let layer = CAShapeLayer()
+    layer.path = UIBezierPath(ovalIn: CGRect(centre: buttonLayer.bounds.centre, size: buttonLayer.bounds.size.rescale(CGFloat.outerCircleRatio))).cgPath
+    layer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+    layer.applyPopShadow()
+    layer.opacity = 0.4
+    return layer
+  }()
+
+  
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -53,6 +71,7 @@ class ButtonView: UIView {
     backgroundColor = #colorLiteral(red: 0.9600390625, green: 0.9600390625, blue: 0.9600390625, alpha: 1)
     
     buttonLayer.frame = bounds.largestContainedSquare.offsetBy(dx: 0, dy: -20)
+    buttonLayer.addSublayer(outerCircle)
     buttonLayer.addSublayer(innerCircle)
     
     layer.addSublayer(buttonLayer)
