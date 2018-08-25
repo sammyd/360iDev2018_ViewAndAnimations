@@ -31,7 +31,8 @@ class ViewController: UIViewController {
     
     guard let swipeUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SwipeUpDetailVC") as? SwipeUpDetailViewController else { return }
     
-    swipeUpVC.modalPresentationStyle = .overFullScreen
+    swipeUpVC.transitioningDelegate = swipeUpTransitioningDelegate
+    swipeUpVC.modalPresentationStyle = .custom
     
     present(swipeUpVC, animated: true)
   }

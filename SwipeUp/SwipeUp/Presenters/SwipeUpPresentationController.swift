@@ -34,8 +34,46 @@ fileprivate extension Double {
 }
 
 class SwipeUpPresentationController: UIPresentationController {
+  private enum Position {
+    case open
+    case closed
+    
+    var visibleProportion: CGFloat {
+      switch self {
+      case .open: return 0.9
+      case .closed: return 0.1
+      }
+    }
+    
+    func origin(for maxHeight: CGFloat) -> CGPoint {
+      return CGPoint(x: 0, y: maxHeight * (1 - visibleProportion))
+    }
+  }
+  
+  private var position: Position = .closed
+
   private var maxFrame: CGRect {
     return UIWindow.maxFrame
   }
+  
+  override var frameOfPresentedViewInContainerView: CGRect {
+    let origin = position.origin(for: maxFrame.height)
+    let size = CGSize(width: maxFrame.width, height: maxFrame.height + 40)
+    return CGRect(origin: origin, size: size)
+  }
+  
+  override func containerViewWillLayoutSubviews() {
+    presentedView?.frame = frameOfPresentedViewInContainerView
+  }
+  
+  override func presentationTransitionDidEnd(_ completed: Bool) {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(recogniser:)))
+    presentedView?.addGestureRecognizer(tapGesture)
+  }
+  
+  @objc func handleTap(recogniser: UITapGestureRecognizer) {
+    let nextPosition = position == .open ? Position.closed : .open
+    self.presentedView?.frame.origin.y = nextPosition.origin(for: self.maxFrame.height).y
+    self.position = nextPosition
+  }
 }
-
