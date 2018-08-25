@@ -38,6 +38,7 @@ extension UIWindow {
     return keyWindow
   }
   
+  // What's the largest internal frame of this window?
   public class var maxFrame: CGRect {
     let width = root.bounds.width
     let height = root.bounds.height + key.safeAreaInsets.bottom
