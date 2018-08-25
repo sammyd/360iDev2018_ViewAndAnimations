@@ -1,7 +1,12 @@
-//: A UIKit based Playground for presenting user interface
+//: # ButtonShield
+//: A demo playground that demonstrates how to use Core Animation layers
+//: to create a fun button, shamelessly stolen from ExpressVPN
+//: > Icons made by [Icon Works](https://www.flaticon.com/authors/icon-works) from [www.flaticon.com](https://www.flaticon.com/) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
 
 import UIKit
 import PlaygroundSupport
+
+//: ### Extensions to store constants
 
 fileprivate extension CGFloat {
   static var outerCircleRatio: CGFloat = 0.8
@@ -13,6 +18,9 @@ fileprivate extension Double {
   static var animationDuration: Double = 0.5
   static var inProgressPeriod: Double = 2.0
 }
+
+
+//: ### The main ButtonView class
 
 class ButtonView: UIView {
   override init(frame: CGRect) {
@@ -31,13 +39,13 @@ class ButtonView: UIView {
   }
 }
 
+//: ### Present the button
 
 let aspectRatio = UIBezierPath.badgePath.bounds.width / UIBezierPath.badgePath.bounds.height
 let button = ButtonView(frame: CGRect(x: 0, y: 0, width: 300, height: 300 / aspectRatio))
 
 // Present the view controller in the Live View window
 PlaygroundPage.current.liveView = button
-
 
 let connection = PseudoConnection { (state) in
   switch state {
@@ -52,5 +60,3 @@ let connection = PseudoConnection { (state) in
 
 let gesture = UITapGestureRecognizer(target: connection, action: #selector(PseudoConnection.toggle))
 button.addGestureRecognizer(gesture)
-
-//: Icons made by <a href="https://www.fΩlaticon.com/authors/icon-works" title="Icon Works">Icon Works</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
