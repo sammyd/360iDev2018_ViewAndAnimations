@@ -122,7 +122,7 @@ class ButtonView: UIView {
   
   private func configureLayers() {
     backgroundColor = #colorLiteral(red: 0.9600390625, green: 0.9600390625, blue: 0.9600390625, alpha: 1)
-    buttonLayer.frame = bounds.largestSquare.offsetBy(dx: 0, dy: -20)
+    buttonLayer.frame = bounds.largestContainedSquare.offsetBy(dx: 0, dy: -20)
     buttonLayer.addSublayer(outerCircle)
     buttonLayer.addSublayer(inProgressLayer)
     buttonLayer.addSublayer(innerCircle)
@@ -133,7 +133,8 @@ class ButtonView: UIView {
   }
   
   private func animateToOn() {
-    let path = UIBezierPath(ovalIn: CGRect(centre: bounds.centre, size: bounds.size.rescale(sqrt(2)))).cgPath
+    
+    let path = UIBezierPath(ovalIn: CGRect(centre: bounds.centre, size: bounds.smallestContainingSquare.size.rescale(sqrt(2)))).cgPath
     let animation = CABasicAnimation(keyPath: "path")
     animation.fromValue = greenBackground.path
     animation.toValue = path

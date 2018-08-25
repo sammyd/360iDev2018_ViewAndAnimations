@@ -9,8 +9,13 @@ public extension CGRect {
     return CGPoint(x: midX, y: midY)
   }
   
-  public var largestSquare: CGRect {
+  public var largestContainedSquare: CGRect {
     let side = min(width, height)
+    return CGRect(centre: centre, size: CGSize(width: side, height: side))
+  }
+  
+  public var smallestContainingSquare: CGRect {
+    let side = max(width, height)
     return CGRect(centre: centre, size: CGSize(width: side, height: side))
   }
 }
