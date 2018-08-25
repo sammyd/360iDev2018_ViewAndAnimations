@@ -68,6 +68,13 @@ class SwipeUpPresentationController: UIPresentationController {
     return UIWindow.maxFrame
   }
   
+  private lazy var animator: UIViewPropertyAnimator = {
+    let timingParams = UISpringTimingParameters(dampingRatio: .springDampingRatio, initialVelocity: CGVector(dx: 0, dy: .springInitialVelocityY))
+    let animator = UIViewPropertyAnimator(duration: .animationDuration, timingParameters: timingParams)
+    animator.isInterruptible = true
+    return animator
+  }()
+  
   override var frameOfPresentedViewInContainerView: CGRect {
     let origin = position.origin(for: maxFrame.height)
     let size = CGSize(width: maxFrame.width, height: maxFrame.height + 40)
@@ -112,8 +119,12 @@ extension SwipeUpPresentationController {
   }
   
   private func animate(to newPosition: Position) {
-    self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
     self.position = newPosition
+    animator.addAnimations {
+      self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
+    }
+    
+    animator.startAnimation()
   }
 }
 
