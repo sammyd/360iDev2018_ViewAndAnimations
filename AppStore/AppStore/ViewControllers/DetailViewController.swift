@@ -35,6 +35,7 @@ class DetailViewController: UIViewController {
   private let cardViewModel: CardViewModel
   private(set) var cardView: CardView?
   private let textLabel = UILabel()
+  private var snapshotView = UIView()
     
   var viewsAreHidden: Bool = false {
     didSet {
@@ -63,6 +64,7 @@ class DetailViewController: UIViewController {
     super.viewDidLoad()
     setNeedsStatusBarAppearanceUpdate()
     setUpViews()
+    createSnapshotOfView()
   }
   
   private func setUpViews() {
@@ -131,12 +133,62 @@ class DetailViewController: UIViewController {
     scrollView.translatesAutoresizingMaskIntoConstraints = false
     scrollView.addConstraints([centerX, width, top])
     scrollView.pin(toView: textLabel, attributes: [.bottom], multiplier: 1.0, constant: 0.0)
+    
+    scrollView.delegate = self
   }
   
   @objc func close() {
     dismiss(animated: true, completion: nil)
   }
+  
+  private func createSnapshotOfView() {
+    snapshotView = view.snapshotView(afterScreenUpdates: true)!
+    snapshotView.isUserInteractionEnabled = true
+    
+    snapshotView.layer.shadowColor = UIColor.black.cgColor
+    snapshotView.layer.shadowOpacity = 0.2
+    snapshotView.layer.shadowRadius = 10
+    snapshotView.layer.shadowOffset = CGSize(width: -1, height: 2)
+    
+    scrollView.addSubview(snapshotView)
+    snapshotView.frame = view.frame
+    snapshotView.isHidden = true
+  }
 }
+
+extension DetailViewController: UIScrollViewDelegate {
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let yPositionForDismissal: CGFloat = 40
+    let minScale: CGFloat = 0.7
+    let targetCornerRadius: CGFloat = 20
+    
+    let yContentOffset = scrollView.contentOffset.y
+    let proportionOfDismissal = abs(scrollView.contentOffset.y / yPositionForDismissal)
+    let rescale = proportionOfDismissal / 2 + 0.5
+    let alpha: CGFloat = 3
+    let rescaledProportion = 2 * pow(rescale, alpha) / (pow(rescale, alpha) + pow((1 - rescale), alpha)) - 1
+    
+    if yContentOffset < 0 && scrollView.isTracking {
+      viewsAreHidden = true
+      snapshotView.isHidden = false
+      snapshotView.clipsToBounds = true
+      
+      let scale = minScale + (1 - minScale) * (1 - rescaledProportion)
+      snapshotView.transform = CGAffineTransform(scaleX: scale, y: scale)
+      let cornerRadius = targetCornerRadius * (1 - rescaledProportion)
+      snapshotView.layer.cornerRadius = cornerRadius
+      
+      if rescaledProportion >= 1 {
+        self.close()
+      }
+      
+    } else {
+      viewsAreHidden = false
+      snapshotView.isHidden = false
+    }
+  }
+}
+
 
 
 
