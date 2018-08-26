@@ -34,6 +34,12 @@ class TransitionManager: NSObject {
   enum TransitionType {
     case presentation
     case dismissal
+    
+    var blurAlpha: CGFloat { return self == .presentation ? 1 : 0 }
+    var dimAlpha : CGFloat { return self == .presentation ? 0.1 : 0 }
+    var cardMode : CardViewMode { return self == .presentation ? .card : .full }
+    var cornerRadius : CGFloat { return self == .presentation ? 20 : 0 }
+    var next: TransitionType { return self == .presentation ? .dismissal : .presentation }
   }
   var transitionType: TransitionType = .presentation
   
@@ -60,11 +66,11 @@ class TransitionManager: NSObject {
   
   private func addBackgroundViews(containerView: UIView) {
     blurEffectView.frame = containerView.frame
-    blurEffectView.alpha = 0
+    blurEffectView.alpha = transitionType.next.blurAlpha
     containerView.addSubview(blurEffectView)
     
     dimmingView.frame = containerView.frame
-    dimmingView.alpha = 0
+    dimmingView.alpha = transitionType.next.dimAlpha
     containerView.addSubview(dimmingView)
   }
 }
@@ -87,14 +93,14 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
       
       // Hide the existing card view, and make a new copy
       cardView.isHidden = true
-      let cardViewCopy = cardView.createCopy()
+      let cardViewCopy = cardView.createCopy(cardMode: transitionType.cardMode)
       containerView.addSubview(cardViewCopy)
       
       let absoluteCardViewFrame = cardView.convert(cardView.frame, to: .none)
       cardViewCopy.frame = absoluteCardViewFrame
       
-      whiteScrollView.frame = cardView.containerView.frame
-      whiteScrollView.layer.cornerRadius = 20
+      whiteScrollView.frame = transitionType == .presentation ? cardView.containerView.frame : containerView.frame
+      whiteScrollView.layer.cornerRadius = transitionType.cornerRadius
       cardViewCopy.insertSubview(whiteScrollView, aboveSubview: cardViewCopy.shadowView)
       
       containerView.addSubview(toVC.view)
