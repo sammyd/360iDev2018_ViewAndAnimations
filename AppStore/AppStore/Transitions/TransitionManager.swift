@@ -83,89 +83,17 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning {
   }
   
   func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-    let containerView = transitionContext.containerView
-    containerView.subviews.forEach { $0.removeFromSuperview() }
-    addBackgroundViews(containerView: containerView)
-    
-    let fromVC = transitionContext.viewController(forKey: .from)
-    let toVC = transitionContext.viewController(forKey: .to)
-    
-    let todayVC = (transition == .presentation ? fromVC : toVC) as! TodayViewController
-    guard let cardView = todayVC.selectedCellCardView() else { return }
-    
-    cardView.isHidden = true
-    let cardViewCopy = createCardViewCopy(cardView: cardView)
-    containerView.addSubview(cardViewCopy)
-    
-    let absoluteCardViewFrame = cardView.convert(cardView.frame, to: .none)
-    cardViewCopy.frame = absoluteCardViewFrame
-    
-    whiteScrollView.frame = cardView.containerView.frame
-    whiteScrollView.layer.cornerRadius = 20
-    cardViewCopy.insertSubview(whiteScrollView, aboveSubview: cardViewCopy.shadowView)
-   
-    if transition == .presentation {
-      let toVC = toVC as! DetailViewController
-      containerView.addSubview(toVC.view)
-      toVC.viewsAreHidden = true
-      
-      moveAndConvertCardView(cardView: cardViewCopy, containerView: containerView, yOriginToMoveTo: 0) {
-        cardView.isHidden = false
-        toVC.viewsAreHidden = false
-        cardViewCopy.removeFromSuperview()
-        transitionContext.completeTransition(true)
-      }
+    if let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController {
+      transitionContext.containerView.addSubview(toVC.view)
+      transitionContext.completeTransition(true)
     } else {
-      cardView.isHidden = false
       transitionContext.completeTransition(true)
     }
   }
   
-  private func makeShrinkAnimator(for cardView: CardView) -> UIViewPropertyAnimator {
-    return UIViewPropertyAnimator(duration: shrinkDuration, curve: .easeOut, animations: {
-      cardView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-      self.dimmingView.alpha = 0.05
-    })
-  }
-  
-  private func makeExpandAnimator(for cardView: CardView, containerView: UIView) -> UIViewPropertyAnimator {
-    let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 4))
-    let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
-    
-    animator.addAnimations {
-      cardView.transform = .identity
-      cardView.containerView.layer.cornerRadius = 0
-      cardView.frame.origin.y = 0
-      
-      self.blurEffectView.alpha = 1
-      
-      self.whiteScrollView.layer.cornerRadius = 0
-      
-      containerView.layoutIfNeeded()
-      
-      self.whiteScrollView.frame = containerView.frame
-    }
-    
-    return animator
-  }
-  
   //MARK: Animation methods
   private func moveAndConvertCardView(cardView: CardView, containerView: UIView, yOriginToMoveTo: CGFloat, completion: @escaping () ->()) {
-    let shrinkAnimator = makeShrinkAnimator(for: cardView)
-    let expandAnimator = makeExpandAnimator(for: cardView, containerView: containerView)
-    
-    shrinkAnimator.addCompletion { (_) in
-      cardView.layoutIfNeeded()
-      cardView.updateLayout(for: .full)
-      
-      expandAnimator.startAnimation()
-    }
-    
-    expandAnimator.addCompletion { (_) in
-      completion()
-    }
-    
-    shrinkAnimator.startAnimation()
+    // TODO
   }
 }
 

@@ -35,9 +35,7 @@ class TodayViewController: UIViewController {
   override var prefersStatusBarHidden: Bool {
     return true
   }
-  
-  private let transitionManager = TransitionManager()
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpViews()
@@ -101,9 +99,6 @@ extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
     
     let cardViewModel = cardViewData[indexPath.row]
     let detailViewController = DetailViewController(cardViewModel: cardViewModel)
-    
-    detailViewController.transitioningDelegate = transitionManager
-    detailViewController.modalPresentationStyle = .overFullScreen
     
     present(detailViewController, animated: true, completion: nil)
     
