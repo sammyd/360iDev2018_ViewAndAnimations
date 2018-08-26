@@ -80,7 +80,7 @@ class SwipeUpPresentationController: UIPresentationController {
   }
   
   private var position: Position = .closed
-  private let dimmedView = UIView()
+  private let dimmedView = TouchPassthroughView()
   
   private var maxFrame: CGRect {
     return UIWindow.maxFrame
@@ -107,10 +107,9 @@ class SwipeUpPresentationController: UIPresentationController {
     guard let containerView = containerView else { return }
     
     containerView.insertSubview(dimmedView, at: 0)
+    dimmedView.passthroughViews.append(presentingViewController.view)
     dimmedView.frame = containerView.bounds
-    dimmedView.backgroundColor = .black
-    dimmedView.isUserInteractionEnabled = false
-    dimmedView.alpha = 0
+    self.setDimmedViewAlpha(0)
   }
   
   override func presentationTransitionDidEnd(_ completed: Bool) {
@@ -127,7 +126,7 @@ class SwipeUpPresentationController: UIPresentationController {
       switch recogniser.state {
       case .changed, .began:
         presentedView?.frame.origin.y = offset
-        dimmedView.alpha = Position.proportionBetweenPartialAndOpen(for: offset, maxHeight: maxFrame.height) * Position.open.dimmedAlpha
+        self.setDimmedViewAlpha(Position.proportionBetweenPartialAndOpen(for: offset, maxHeight: maxFrame.height) * Position.open.dimmedAlpha)
       case .ended, .cancelled:
         animate(to: offset)
       default:
@@ -151,10 +150,20 @@ extension SwipeUpPresentationController {
     self.position = newPosition
     animator.addAnimations {
       self.presentedView?.frame.origin.y = newPosition.origin(for: self.maxFrame.height).y
-      self.dimmedView.alpha = newPosition.dimmedAlpha
+      self.setDimmedViewAlpha(newPosition.dimmedAlpha)
     }
     
     animator.startAnimation()
+  }
+  
+  private func setDimmedViewAlpha(_ alpha: CGFloat) {
+    if alpha <= 0.01 {
+      dimmedView.backgroundColor = .clear
+      dimmedView.alpha = 0.015
+    } else {
+      dimmedView.backgroundColor = .black
+      dimmedView.alpha = alpha
+    }
   }
 }
 

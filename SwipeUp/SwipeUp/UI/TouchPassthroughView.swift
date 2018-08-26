@@ -23,5 +23,19 @@
 import UIKit
 
 class TouchPassthroughView: UIView {
+  var passthroughViews = [UIView]()
   
+  override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    let hit = super.hitTest(point, with: event)
+    if hit != self {
+      return hit
+    }
+    for passthroughView in passthroughViews {
+      let hit = passthroughView.hitTest(convert(point, to: passthroughView), with: event)
+      if hit != .none {
+        return hit
+      }
+    }
+    return .none
+  }
 }
