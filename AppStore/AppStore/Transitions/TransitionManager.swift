@@ -29,18 +29,11 @@
 import Foundation
 import UIKit
 
-enum TransitionType {
-  case presentation
-  case dismissal
-}
 
-
-class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning {
-  
+class TransitionManager: NSObject {
   //MARK: Helpers
   let transitionDuration: Double = 0.8
   let shrinkDuration: Double = 0.2
-  var transition: TransitionType = .presentation
   
   private let blurEffectView: UIVisualEffectView = {
     let blurEffect = UIBlurEffect(style: .light)
@@ -68,44 +61,5 @@ class TransitionManager: NSObject, UIViewControllerAnimatedTransitioning {
     dimmingView.alpha = 0
     containerView.addSubview(dimmingView)
   }
-  
-  private func createCardViewCopy(cardView: CardView) -> CardView {
-    let cardModel = cardView.cardModel
-    cardModel.viewMode = .card
-    let newAppView: AppView? = AppView(cardView.appView?.viewModel)
-    let cardViewCopy = CardView(cardModel: cardModel, appView: newAppView)
-    return cardViewCopy
-  }
-  
-  //MARK: UIViewControllerAnimatedTransitioning protocol methods
-  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-    return transitionDuration
-  }
-  
-  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-    if let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController {
-      transitionContext.containerView.addSubview(toVC.view)
-      transitionContext.completeTransition(true)
-    } else {
-      transitionContext.completeTransition(true)
-    }
-  }
-  
-  //MARK: Animation methods
-  private func moveAndConvertCardView(cardView: CardView, containerView: UIView, yOriginToMoveTo: CGFloat, completion: @escaping () ->()) {
-    // TODO
-  }
 }
 
-//MARK: UIViewControllerTransitioningDelegate
-extension TransitionManager: UIViewControllerTransitioningDelegate {
-  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    transition = .presentation
-    return self
-  }
-  
-  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    transition = .dismissal
-    return self
-  }
-}

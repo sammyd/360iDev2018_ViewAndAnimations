@@ -336,4 +336,11 @@ extension CardView: UITableViewDelegate, UITableViewDataSource {
   }
 }
 
-
+extension CardView {
+  func createCopy() -> CardView {
+    let newModel = cardModel
+    newModel.viewMode = .card
+    let newAppView: AppView? = AppView(appView?.viewModel)
+    return CardView(cardModel: newModel, appView: newAppView)
+  }
+}
