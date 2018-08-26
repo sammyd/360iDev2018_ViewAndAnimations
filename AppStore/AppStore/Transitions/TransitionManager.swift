@@ -93,6 +93,10 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
       let absoluteCardViewFrame = cardView.convert(cardView.frame, to: .none)
       cardViewCopy.frame = absoluteCardViewFrame
       
+      whiteScrollView.frame = cardView.containerView.frame
+      whiteScrollView.layer.cornerRadius = 20
+      cardViewCopy.insertSubview(whiteScrollView, aboveSubview: cardViewCopy.shadowView)
+      
       containerView.addSubview(toVC.view)
       toVC.viewsAreHidden = true
       
@@ -150,6 +154,10 @@ extension TransitionManager {
       self.blurEffectView.alpha = 1
       
       containerView.layoutIfNeeded()
+      
+      self.whiteScrollView.layer.cornerRadius = 0
+      self.whiteScrollView.frame = containerView.frame
+
     }
     
     return animator
