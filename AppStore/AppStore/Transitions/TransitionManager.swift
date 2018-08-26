@@ -31,6 +31,12 @@ import UIKit
 
 
 class TransitionManager: NSObject {
+  enum TransitionType {
+    case presentation
+    case dismissal
+  }
+  var transitionType: TransitionType = .presentation
+  
   //MARK: Helpers
   let transitionDuration: Double = 0.8
   let shrinkDuration: Double = 0.2
@@ -69,7 +75,34 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
   }
   
   func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-    if let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController {
+    if transitionType == .presentation {
+      guard let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController,
+        let fromVC = transitionContext.viewController(forKey: .from) as? TodayViewController,
+        let cardView = fromVC.selectedCellCardView() else { return }
+      
+      // Prepare the container view
+      let containerView = transitionContext.containerView
+      containerView.subviews.forEach { $0.removeFromSuperview() }
+      addBackgroundViews(containerView: containerView)
+      
+      // Hide the existing card view, and make a new copy
+      cardView.isHidden = true
+      let cardViewCopy = cardView.createCopy()
+      containerView.addSubview(cardViewCopy)
+      
+      let absoluteCardViewFrame = cardView.convert(cardView.frame, to: .none)
+      cardViewCopy.frame = absoluteCardViewFrame
+      
+      containerView.addSubview(toVC.view)
+      toVC.viewsAreHidden = true
+      
+      moveAndConvertCardView(cardView: cardViewCopy, containerView: containerView, yOriginToMoveTo: 0) {
+        cardView.isHidden = false
+        toVC.viewsAreHidden = false
+        cardViewCopy.removeFromSuperview()
+        transitionContext.completeTransition(true)
+      }
+
       transitionContext.containerView.addSubview(toVC.view)
       transitionContext.completeTransition(true)
     } else {
@@ -78,12 +111,60 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
   }
 }
 
+// Animations
+extension TransitionManager {
+  private func moveAndConvertCardView(cardView: CardView, containerView: UIView, yOriginToMoveTo: CGFloat, completion: @escaping () ->()) {
+    let shrinkAnimator = makeShrinkAnimator(for: cardView)
+    let expandAnimator = makeExpandAnimator(for: cardView, containerView: containerView)
+    
+    shrinkAnimator.addCompletion { (_) in
+      cardView.layoutIfNeeded()
+      cardView.updateLayout(for: .full)
+      
+      expandAnimator.startAnimation()
+    }
+    
+    expandAnimator.addCompletion { (_) in
+      completion()
+    }
+    
+    shrinkAnimator.startAnimation()
+  }
+  
+  private func makeShrinkAnimator(for cardView: CardView) -> UIViewPropertyAnimator {
+    return UIViewPropertyAnimator(duration: shrinkDuration, curve: .easeOut, animations: {
+      cardView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+      self.dimmingView.alpha = 0.05
+    })
+  }
+  
+  private func makeExpandAnimator(for cardView: CardView, containerView: UIView) -> UIViewPropertyAnimator {
+    let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 4))
+    let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
+    
+    animator.addAnimations {
+      cardView.transform = .identity
+      cardView.containerView.layer.cornerRadius = 0
+      cardView.frame.origin.y = 0
+      
+      self.blurEffectView.alpha = 1
+      
+      containerView.layoutIfNeeded()
+    }
+    
+    return animator
+  }
+}
+
+
 extension TransitionManager: UIViewControllerTransitioningDelegate {
   func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    transitionType = .presentation
     return self
   }
   
   func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    transitionType = .dismissal
     return self
   }
 }
