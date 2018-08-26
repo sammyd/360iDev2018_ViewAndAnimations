@@ -69,6 +69,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2296B7E121323590002A4053 /* Guff */ = {
+			isa = PBXGroup;
+			children = (
+				B6BF63BE209F1343000FDF39 /* Info.plist */,
+				B6BF63B9209F1343000FDF39 /* Assets.xcassets */,
+				B6BF63B2209F1341000FDF39 /* AppDelegate.swift */,
+			);
+			path = Guff;
+			sourceTree = "<group>";
+		};
 		B6BF63A6209F1341000FDF39 = {
 			isa = PBXGroup;
 			children = (
@@ -89,16 +99,12 @@
 			isa = PBXGroup;
 			children = (
 				B6BF64D5209F29C9000FDF39 /* Data */,
+				2296B7E121323590002A4053 /* Guff */,
+				B6BF64D0209F29A9000FDF39 /* Helpers */,
+				B6BF64D1209F29B2000FDF39 /* Transitions */,
+				B6BF64D2209F29B8000FDF39 /* UI */,
 				B6BF64D4209F29C2000FDF39 /* ViewControllers */,
 				B6BF64D3209F29BD000FDF39 /* ViewModels */,
-				B6BF64D2209F29B8000FDF39 /* UI */,
-				B6BF64D1209F29B2000FDF39 /* Transitions */,
-				B6BF64D0209F29A9000FDF39 /* Helpers */,
-				B6BF63B2209F1341000FDF39 /* AppDelegate.swift */,
-				B6BF63B6209F1341000FDF39 /* Main.storyboard */,
-				B6BF63B9209F1343000FDF39 /* Assets.xcassets */,
-				B6BF63BB209F1343000FDF39 /* LaunchScreen.storyboard */,
-				B6BF63BE209F1343000FDF39 /* Info.plist */,
 			);
 			path = AppStore;
 			sourceTree = "<group>";
@@ -128,6 +134,8 @@
 		B6BF64D2209F29B8000FDF39 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B6BF63BB209F1343000FDF39 /* LaunchScreen.storyboard */,
+				B6BF63B6209F1341000FDF39 /* Main.storyboard */,
 				B6BF64E7209F29F3000FDF39 /* AppView.swift */,
 				B6BF64E6209F29F3000FDF39 /* CardView.swift */,
 				B6BF64E8209F29F3000FDF39 /* GenericTableViewCell.swift */,
@@ -399,7 +407,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D23W9URMHY;
-				INFOPLIST_FILE = AppStore/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AppStore/Guff/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -417,7 +425,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = D23W9URMHY;
-				INFOPLIST_FILE = AppStore/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/AppStore/Guff/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
