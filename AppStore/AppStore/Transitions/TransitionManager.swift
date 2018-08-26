@@ -63,3 +63,33 @@ class TransitionManager: NSObject {
   }
 }
 
+extension TransitionManager: UIViewControllerAnimatedTransitioning {
+  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    return transitionDuration
+  }
+  
+  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    if let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController {
+      transitionContext.containerView.addSubview(toVC.view)
+      transitionContext.completeTransition(true)
+    } else {
+      transitionContext.completeTransition(true)
+    }
+  }
+}
+
+extension TransitionManager: UIViewControllerTransitioningDelegate {
+  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    return self
+  }
+  
+  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    return self
+  }
+}
+
+
+
+
+
+
