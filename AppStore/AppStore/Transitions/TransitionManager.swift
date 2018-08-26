@@ -81,15 +81,15 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
   }
   
   func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    // Prepare the container view
+    let containerView = transitionContext.containerView
+    containerView.subviews.forEach { $0.removeFromSuperview() }
+    addBackgroundViews(containerView: containerView)
+    
     if transitionType == .presentation {
       guard let toVC = transitionContext.viewController(forKey: .to) as? DetailViewController,
         let fromVC = transitionContext.viewController(forKey: .from) as? TodayViewController,
         let cardView = fromVC.selectedCellCardView() else { return }
-      
-      // Prepare the container view
-      let containerView = transitionContext.containerView
-      containerView.subviews.forEach { $0.removeFromSuperview() }
-      addBackgroundViews(containerView: containerView)
       
       // Hide the existing card view, and make a new copy
       cardView.isHidden = true
@@ -116,7 +116,22 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
       transitionContext.containerView.addSubview(toVC.view)
       transitionContext.completeTransition(true)
     } else {
-      transitionContext.completeTransition(true)
+      guard let fromVC = transitionContext.viewController(forKey: .from) as? DetailViewController,
+        let toVC = transitionContext.viewController(forKey: .to) as? TodayViewController,
+        let cardView = toVC.selectedCellCardView() else { return }
+      // Hide the existing card view, and make a new copy
+      cardView.isHidden = true
+      let cardViewCopy = cardView.createCopy(cardMode: transitionType.cardMode)
+      containerView.addSubview(cardViewCopy)
+      cardViewCopy.frame = fromVC.cardView!.frame
+      fromVC.viewsAreHidden = true
+      let absoluteCardViewFrame = cardView.convert(cardView.frame, to: .none)
+      
+      moveAndConvertCardView(cardView: cardViewCopy, containerView: containerView, yOriginToMoveTo: absoluteCardViewFrame.origin.y) {
+        cardView.isHidden = false
+        transitionContext.completeTransition(true)
+      }
+
     }
   }
 }
@@ -125,20 +140,26 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 extension TransitionManager {
   private func moveAndConvertCardView(cardView: CardView, containerView: UIView, yOriginToMoveTo: CGFloat, completion: @escaping () ->()) {
     let shrinkAnimator = makeShrinkAnimator(for: cardView)
-    let expandAnimator = makeExpandAnimator(for: cardView, containerView: containerView)
-    
-    shrinkAnimator.addCompletion { (_) in
-      cardView.layoutIfNeeded()
-      cardView.updateLayout(for: .full)
-      
-      expandAnimator.startAnimation()
-    }
+    let expandAnimator = makeExpandContractAnimator(for: cardView, containerView: containerView, yOrigin: yOriginToMoveTo)
     
     expandAnimator.addCompletion { (_) in
       completion()
     }
     
-    shrinkAnimator.startAnimation()
+    if self.transitionType == .presentation {
+      shrinkAnimator.addCompletion { (_) in
+        cardView.layoutIfNeeded()
+        cardView.updateLayout(for: self.transitionType.next.cardMode)
+        
+        expandAnimator.startAnimation()
+      }
+      
+      shrinkAnimator.startAnimation()
+    } else {
+      cardView.layoutIfNeeded()
+      cardView.updateLayout(for: self.transitionType.next.cardMode)
+      expandAnimator.startAnimation()
+    }
   }
   
   private func makeShrinkAnimator(for cardView: CardView) -> UIViewPropertyAnimator {
@@ -148,21 +169,22 @@ extension TransitionManager {
     })
   }
   
-  private func makeExpandAnimator(for cardView: CardView, containerView: UIView) -> UIViewPropertyAnimator {
+  private func makeExpandContractAnimator(for cardView: CardView, containerView: UIView, yOrigin: CGFloat) -> UIViewPropertyAnimator {
     let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 4))
     let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
     
     animator.addAnimations {
       cardView.transform = .identity
-      cardView.containerView.layer.cornerRadius = 0
-      cardView.frame.origin.y = 0
+      cardView.containerView.layer.cornerRadius = self.transitionType.next.cornerRadius
+      cardView.frame.origin.y = yOrigin
       
-      self.blurEffectView.alpha = 1
+      self.blurEffectView.alpha = self.transitionType.blurAlpha
+      self.dimmingView.alpha = self.transitionType.dimAlpha
       
       containerView.layoutIfNeeded()
       
-      self.whiteScrollView.layer.cornerRadius = 0
-      self.whiteScrollView.frame = containerView.frame
+      self.whiteScrollView.layer.cornerRadius = cardView.containerView.layer.cornerRadius
+      self.whiteScrollView.frame = self.transitionType == .presentation ? containerView.frame : cardView.containerView.frame
 
     }
     
