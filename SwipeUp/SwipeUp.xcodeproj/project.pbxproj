@@ -18,6 +18,7 @@
 		22678BAE212E9B2200BDF31D /* UIWindow+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */; };
 		22678BB0212E9B4A00BDF31D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */; };
 		22678BB2212ECC8B00BDF31D /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */; };
+		2296B7E32132A47E002A4053 /* TouchPassthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2296B7E22132A47E002A4053 /* TouchPassthroughView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		22678BAD212E9B2200BDF31D /* UIWindow+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extensions.swift"; sourceTree = "<group>"; };
 		22678BAF212E9B4A00BDF31D /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		22678BB1212ECC8B00BDF31D /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		2296B7E22132A47E002A4053 /* TouchPassthroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchPassthroughView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 			children = (
 				22678B9E212D9FC100BDF31D /* LaunchScreen.storyboard */,
 				22678B99212D9FC000BDF31D /* Main.storyboard */,
+				2296B7E22132A47E002A4053 /* TouchPassthroughView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				22678BB0212E9B4A00BDF31D /* UIView+Extensions.swift in Sources */,
 				22678B98212D9FC000BDF31D /* ViewController.swift in Sources */,
 				22678BAC212DA21200BDF31D /* SwipeUpPresentationController.swift in Sources */,
+				2296B7E32132A47E002A4053 /* TouchPassthroughView.swift in Sources */,
 				22678B96212D9FBF00BDF31D /* AppDelegate.swift in Sources */,
 				22678BAE212E9B2200BDF31D /* UIWindow+Extensions.swift in Sources */,
 				22678BAA212DA15400BDF31D /* SwipeUpTransitioningDelegate.swift in Sources */,
